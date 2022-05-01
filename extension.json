@@ -1,8 +1,12 @@
 {
-    "identifier": "llc.snow.zig",
-    "name": "Zig",
-    "organization": "Snow Developments",
-    "description": "Lorem ipsum, dolor sit amet.",
-    "version": "1.0",
-    "categories": ["languages"]
+  "identifier": "llc.snow.zig",
+  "name": "Zig",
+  "organization": "Snow Developments",
+  "description": "Syntax highlighting and autocompletion for Zig.",
+  "version": "0.1",
+  "categories": ["languages"],
+  "repository": "https://github.com/snow-developments/nova-zig",
+  "homepage": "https://github.com/snow-developments/nova-zig#readme",
+  "bugs": "https://github.com/snow-developments/nova-zig/issues",
+  "license": "MIT"
 }
