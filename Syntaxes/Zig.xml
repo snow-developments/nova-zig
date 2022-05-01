@@ -61,7 +61,7 @@
                 <capture number="0" name="zig.bracket" />
             </ends-with>
             <subscopes>
-                <include syntax="self" collection="fields" />
+                <include syntax="self" collection="members" />
             </subscopes>
         </scope>
         <scope name="zig.union">
@@ -80,7 +80,7 @@
                 <capture number="0" name="zig.bracket" />
             </ends-with>
             <subscopes>
-                <include syntax="self" collection="fields" />
+                <include syntax="self" collection="members" />
             </subscopes>
         </scope>
         <scope name="zig.enum">
@@ -99,6 +99,9 @@
                 <expression>\}</expression>
                 <capture number="0" name="zig.bracket" />
             </ends-with>
+            <subscopes>
+                <include syntax="self" collection="members" />
+            </subscopes>
         </scope>
         
         <scope name="zig.function">
@@ -257,14 +260,20 @@
             </scope>
         </collection>
         
-        <collection name="fields">
-            <scope name="zig.container.field">
+        <collection name="members">
+            <scope name="zig.container.member">
                 <symbol type="property" />
-                <expression>(comptime)?\s+([A-Za-z_][A-Za-z0-9_]*)\s*:\s*((anytype|[^,\s]+))</expression>
+                <expression>(comptime)?\s+([A-Za-z_][A-Za-z0-9_]*)\s*:\s*((anytype)|[^,\s\n]+)</expression>
                 <capture number="1" name="zig.keyword.comptime" />
                 <capture number="2" name="zig.field.name" />
                 <capture number="3" name="zig.field.type" />
                 <capture number="4" name="zig.keyword.anytype" />
+            </scope>
+            <scope name="zig.container.enum.member">
+                <symbol type="enum-member" />
+                <expression>(comptime)?\s+([A-Za-z_][A-Za-z0-9_]*)\b</expression>
+                <capture number="1" name="zig.keyword.comptime" />
+                <capture number="2" name="zig.enum.member.name" />
             </scope>
         </collection>
         

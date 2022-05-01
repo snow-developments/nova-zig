@@ -18,8 +18,14 @@ const Payload = union {
     boolean: bool,
 };
 
-const Flags = enum {};
-const NodeType = enum(u32) {};
+const Flags = enum {
+  yes,
+  no
+};
+const NodeType = enum(u32) {
+  anchor,
+  section
+};
 
 // Do the thing
 fn foo() {
