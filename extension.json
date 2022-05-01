@@ -1,0 +1,8 @@
+{
+    "identifier": "llc.snow.zig",
+    "name": "Zig",
+    "organization": "Snow Developments",
+    "description": "Lorem ipsum, dolor sit amet.",
+    "version": "1.0",
+    "categories": ["languages"]
+}

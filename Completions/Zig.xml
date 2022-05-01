@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<completions xmlns="https://www.nova.app/completions">
+    <provider>
+        <selector>zig</selector>
+        <expression>\b[a-zA-Z0-9-_]*</expression>
+        <set>zig.entities</set>
+    </provider>
+    
+    <!-- Entities -->
+    <set name="zig.entities">
+        <completion string="&quot;" />
+        <completion string="&amp;" />
+        <completion string="&apos;" />
+        <completion string="&lt;" />
+        <completion string="&gt;" />
+    </set>
+</completions>
