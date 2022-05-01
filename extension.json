@@ -4,7 +4,7 @@
   "organization": "Snow Developments",
   "description": "Syntax highlighting and autocompletion for Zig.",
   "version": "0.1",
-  "categories": ["languages"],
+  "categories": ["languages", "completions"],
   "repository": "https://github.com/snow-developments/nova-zig",
   "homepage": "https://github.com/snow-developments/nova-zig#readme",
   "bugs": "https://github.com/snow-developments/nova-zig/issues",

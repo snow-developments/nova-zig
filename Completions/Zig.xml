@@ -1,17 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <completions xmlns="https://www.nova.app/completions">
-    <provider>
+    <provider name="zig">
         <selector>zig</selector>
         <expression>\b[a-zA-Z0-9-_]*</expression>
-        <set>zig.entities</set>
+        <set>zig.keywords</set>
     </provider>
     
     <!-- Entities -->
-    <set name="zig.entities">
-        <completion string="&quot;" />
-        <completion string="&amp;" />
-        <completion string="&apos;" />
-        <completion string="&lt;" />
-        <completion string="&gt;" />
+    <set name="zig.keywords">
+        <completion string="align" />
+        <completion string="allowzero" />
+        <completion string="and" />
+        <completion string="anyframe" />
+        <completion string="anytype" />
+        <completion string="asm" />
+        <completion string="async" />
+        <completion string="await" />
+        <completion string="break" />
+        <completion string="callconv" />
+        <completion string="catch" />
+        <completion string="comptime" />
+        <completion string="const" />
+        <completion string="continue" />
+        <completion string="defer" />
+        <completion string="else" />
+        <completion string="enum" />
+        <completion string="errdefer" />
+        <completion string="error" />
+        <completion string="export" />
+        <completion string="extern" />
+        <completion string="fn" />
+        <completion string="for" />
+        <completion string="if" />
+        <completion string="inline" />
+        <completion string="noalias" />
+        <completion string="nosuspend" />
+        <completion string="noinline" />
+        <completion string="opaque" />
+        <completion string="or" />
+        <completion string="orelse" />
+        <completion string="packed" />
+        <completion string="pub" />
+        <completion string="resume" />
+        <completion string="return" />
+        <completion string="linksection" />
+        <completion string="struct" />
+        <completion string="suspend" />
+        <completion string="switch" />
+        <completion string="test" />
+        <completion string="threadlocal" />
+        <completion string="try" />
+        <completion string="union" />
+        <completion string="unreachable" />
+        <completion string="usingnamespace" />
+        <completion string="var" />
+        <completion string="volatile" />
+        <completion string="while" />
     </set>
 </completions>
