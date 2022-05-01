@@ -27,7 +27,7 @@
             <expression>//</expression>
         </single>
     </comments>
-    
+
     <brackets>
         <pair open="{" close="}" />
         <pair open="[" close="]" />
@@ -137,13 +137,20 @@
         </scope>
 
         <!-- Comments -->
-        <scope name="zig.comment.doc" spell-check="true">
+        <scope name="zig.comment">
             <symbol type="comment" />
-            <expression>\/\/\/([^\n]* [ \n]*)</expression>
+            <expression>\/\/\s*([^\n]*)</expression>
+            <capture number="1" name="zig.comment" />
         </scope>
-        <scope name="zig.comment.doc.container" spell-check="true">
+        <scope name="zig.comment.doc">
             <symbol type="comment" />
-            <expression>\/\/\!([^\n]* [ \n]*)</expression>
+            <expression>\/\/\/\s*([^\n]*)</expression>
+            <capture number="1" name="zig.comment" />
+        </scope>
+        <scope name="zig.comment.doc.container">
+            <symbol type="comment" />
+            <expression>\/\/\!\s*([^\n]*)</expression>
+            <capture number="1" name="zig.comment" />
         </scope>
         
         <!-- Multi-line Strings -->

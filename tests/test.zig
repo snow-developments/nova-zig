@@ -21,7 +21,7 @@ const Payload = union {
 const Flags = enum {};
 const NodeType = enum(u32) {};
 
-/// Do the thing
+// Do the thing
 fn foo() {
   const bar = "";
   print("foobar");
