@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- See https://ziglang.org/documentation/master/#Grammar -->
 <syntax name="zig" xmlns="https://www.nova.app/syntax">
     <meta>
         <name>Zig</name>
@@ -10,6 +9,8 @@
     <detectors>
         <extension priority="1.0">zig</extension>
     </detectors>
+    
+    <!-- See https://ziglang.org/documentation/master/#Grammar -->
     
     <!-- TODO: Audit indentation rules for Zig blocks, e.g. {}, etc. -->
     <indentation>
@@ -25,15 +26,6 @@
         <single>
             <expression>//</expression>
         </single>
-        <!-- TODO: Does Zig support multiline comments? -->
-        <!-- <multiline>
-            <starts-with>
-                <expression>&lt;!--</expression>
-            </starts-with>
-            <ends-with>
-                <expression>--&gt;</expression>
-            </ends-with>
-        </multiline> -->
     </comments>
     
     <brackets>
@@ -46,44 +38,111 @@
         <pair open="{" close="}" />
         <pair open="[" close="]" />
         <pair open="(" close=")" />
-        <pair open="&apos;" close="&apos;" />
         <pair open="&quot;" close="&quot;" />
-        <pair open="`" close="`" />
     </surrounding-pairs>
     
     <scopes>
-        <!-- Meta -->
-        <scope name="zig.meta.processing">
+        <!-- Declarations -->
+        <include syntax="self" collection="declarations" />
+
+        <scope name="zig.struct">
+            <symbol type="struct">
+                <context behavior="subtree" />
+            </symbol>
             <starts-with>
-                <expression>&lt;\?zig</expression>
+                <expression>(const)\s+([A-Za-z_][A-Za-z0-9_]*)\s=\s(struct|packed\s+struct)\s(\{)</expression>
+                <capture number="1" name="zig.keyword.const" />
+                <capture number="2" name="zig.struct.name" />
+                <capture number="3" name="zig.keyword.struct" />
+                <capture number="4" name="zig.bracket" />
             </starts-with>
             <ends-with>
-                <expression>\?&gt;</expression>
+                <expression>\}</expression>
+                <capture number="0" name="zig.bracket" />
             </ends-with>
+            <subscopes>
+                <include syntax="self" collection="fields" />
+            </subscopes>
         </scope>
-        <scope name="zig.meta.declaration">
+        <scope name="zig.union">
+            <symbol type="union">
+                <context behavior="subtree" />
+            </symbol>
             <starts-with>
-                <expression>&lt;!(?i:DOCTYPE)</expression>
+                <expression>(const)\s+([A-Za-z_][A-Za-z0-9_]*)\s+=\s+(union)\s+(\{)</expression>
+                <capture number="1" name="zig.keyword.const" />
+                <capture number="2" name="zig.struct.name" />
+                <capture number="3" name="zig.keyword.union" />
+                <capture number="4" name="zig.bracket" />
             </starts-with>
             <ends-with>
-                <expression>&gt;</expression>
+                <expression>\}</expression>
+                <capture number="0" name="zig.bracket" />
             </ends-with>
+            <subscopes>
+                <include syntax="self" collection="fields" />
+            </subscopes>
         </scope>
-        <scope name="zig.meta.cdata">
+        <scope name="zig.enum">
+            <symbol type="enum">
+                <context behavior="subtree" />
+            </symbol>
             <starts-with>
-                <expression>&lt;!\[(?i:CDATA)\[</expression>
+                <expression>(const)\s+([A-Za-z_][A-Za-z0-9_]*)\s+=\s+(enum)(\(([^\)]+)\))?\s+(\{)</expression>
+                <capture number="1" name="zig.keyword.const" />
+                <capture number="2" name="zig.enum.name" />
+                <capture number="3" name="zig.keyword.enum" />
+                <capture number="5" name="zig.enum.type" />
+                <capture number="6" name="zig.bracket" />
             </starts-with>
             <ends-with>
-                <expression>\]\]&gt;</expression>
+                <expression>\}</expression>
+                <capture number="0" name="zig.bracket" />
             </ends-with>
-            <subscopes />
         </scope>
         
+        <scope name="zig.function">
+            <symbol type="function">
+                <context behavior="subtree" />
+            </symbol>
+            <starts-with>
+                <expression>(fn)\s+([^\(\s\n]*)\s*\([^\)]*\)\s+\{</expression>
+                <capture number="1" name="zig.keyword.fn" />
+                <capture number="2" name="zig.function.name" />
+            </starts-with>
+            <ends-with>
+                <expression>\}</expression>
+                <capture number="0" name="zig.bracket" />
+            </ends-with>
+            <subscopes>
+                <include syntax="self" collection="declarations" />
+            </subscopes>
+        </scope>
+
+        <!-- Tests -->
+        <scope name="zig.declaration.test">
+            <!-- TODO: Is `bookmark` the best symbol type for tests? -->
+            <symbol type="bookmark">
+                <context behavior="subtree" />
+            </symbol>
+            <starts-with>
+                <expression>(test)\s+&quot;([^&quot;]+)"\s+\{</expression>
+                <capture number="1" name="zig.keyword.test" />
+                <capture number="2" name="zig.test.name" />
+            </starts-with>
+            <ends-with>
+                <expression>\}</expression>
+                <capture number="0" name="zig.bracket" />
+            </ends-with>
+        </scope>
+
         <!-- Comments -->
         <scope name="zig.comment.doc" spell-check="true">
+            <symbol type="comment" />
             <expression>\/\/\/([^\n]* [ \n]*)</expression>
         </scope>
         <scope name="zig.comment.doc.container" spell-check="true">
+            <symbol type="comment" />
             <expression>\/\/\!([^\n]* [ \n]*)</expression>
         </scope>
         
@@ -92,35 +151,26 @@
             <expression>\\\\([^\n]* [ \n]*)</expression>
         </scope>
 
-        <!-- Keywords -->
         <include syntax="self" collection="keywords" />
-        <!-- Blocks -->
-        <scope name="zig.block">
-            <starts-with>
-                <expression>\{</expression>
-                <capture number="0" name="zig.block.body.bracket" />
-            </starts-with>
-            <ends-with>
-                <expression>\}</expression>
-                <capture number="0" name="zig.block.body.bracket" />
-            </ends-with>
-        </scope>
+        <inlude syntax="self" collection="containers" />
 
         <include syntax="self" collection="numbers" />
         <include syntax="self" collection="strings" />
-        <include syntax="self" collection="identifiers" />
-        
+
         <!-- Inline Assembly -->
         <scope name="zig.assembly">
+            <symbol type="expression">
+                <context behavior="subtree" />
+            </symbol>
             <starts-with>
-                <expression>\b(asm)\s+(volatile)\s+(\()</expression>
+                <expression>(asm)\s+(volatile)?\s*(\()</expression>
                 <capture number="1" name="zig.keyword.asm" />
                 <capture number="2" name="zig.keyword.volatile" />
                 <capture number="3" name="zig.assembly.paren.left" />
             </starts-with>
             <ends-with>
-                <expression>(\))</expression>
-                <capture number="1" name="zig.assembly.paren.right" />
+                <expression>\)</expression>
+                <capture number="0" name="zig.assembly.paren.right" />
             </ends-with>
             <subsyntax name="assembly">
             </subsyntax>
@@ -185,13 +235,41 @@
             </scope>
         </collection>
         
+        <collection name="declarations">
+            <scope name="zig.constant">
+                <symbol type="constant" />
+                <expression>(const)\s+([A-Za-z_][A-Za-z0-9_]*)\s=\s(?!struct|packed\s+struct|enum|union)</expression>
+                <capture number="1" name="zig.keyword.const" />
+                <capture number="2" name="zig.constant.name" />
+            </scope>
+            <scope name="zig.variable">
+                <symbol type="variable" />
+                <expression>(var)\s+([A-Za-z_][A-Za-z0-9_]*)</expression>
+                <capture number="1" name="zig.keyword.var" />
+                <capture number="2" name="zig.constant.name" />
+            </scope>
+        </collection>
+        
+        <collection name="fields">
+            <scope name="zig.container.field">
+                <symbol type="property" />
+                <expression>(comptime)?\s+([A-Za-z_][A-Za-z0-9_]*)\s*:\s*((anytype|[^,\s]+))</expression>
+                <capture number="1" name="zig.keyword.comptime" />
+                <capture number="2" name="zig.field.name" />
+                <capture number="3" name="zig.field.type" />
+                <capture number="4" name="zig.keyword.anytype" />
+            </scope>
+        </collection>
+        
         <!-- Numbers -->
         <collection name="numbers">
             <scope name="zig.number.float">
+                <symbol type="expression" />
                 <!-- TODO: Add `bin_int`, `oct_int`, and `hex_int` -->
                 <expression>([0-9]_?[0-9])+([eE][-+]?([0-9]_?[0-9])+)?</expression>
             </scope>
             <scope name="zig.number.integer">
+                <symbol type="expression" />
                 <!-- TODO: Add `bin_int`, `oct_int`, and `hex_int` -->
                 <expression>(([0-9]_?[0-9])+)</expression>
             </scope>
@@ -215,34 +293,35 @@
                 <capture number="2" name="zig.string.line.body" />
             </scope>
             <scope name="zig.string.literal" spell-check="true">
+                <symbol type="expression" />
                 <!-- See `STRINGLITERAL` -->
                 <starts-with>
-                    <expression>(\")</expression>
-                    <capture number="1" name="zig.string.quot.left" />
+                    <expression>&quot;</expression>
+                    <capture number="0" name="zig.string.quot.left" />
                 </starts-with>
                 <ends-with>
-                    <expression>(\")</expression>
-                    <capture number="1" name="zig.string.quot.right" />
+                    <expression>&quot;</expression>
+                    <capture number="0" name="zig.string.quot.right" />
                 </ends-with>
             </scope>
         </collection>
 
         <!-- Identifiers -->
         <collection name="identifiers">
-            <scope name="zig.identifiers.identifier.plain">
-                <expression>([A-Za-z_] [A-Za-z0-9_]*)</expression>
+            <scope name="zig.identifier.plain">
+                <expression>([A-Za-z_][A-Za-z0-9_]*)</expression>
             </scope>
-            <scope name="zig.identifiers.identifier.string">
-            <starts-with>
-                <expression>(@\")</expression>
-                <capture number="2" name="zig.identifiers.string.quot.left" />
-            </starts-with>
-            <ends-with>
-                <expression>(\")</expression>
-                <capture number="1" name="zig.identifiers.string.quot.right" />
-            </ends-with>
+            <scope name="zig.identifier.string">
+                <starts-with>
+                    <expression>@&quot;</expression>
+                    <capture number="0" name="zig.string.quot.left" />
+                </starts-with>
+                <ends-with>
+                    <expression>&quot;</expression>
+                    <capture number="0" name="zig.string.quot.right" />
+                </ends-with>
             </scope>
-            <scope name="zig.identifiers.identifier.builtin">
+            <scope name="zig.identifier.builtin">
                 <expression>(([0-9]_?[0-9])+)</expression>
             </scope>
         </collection>

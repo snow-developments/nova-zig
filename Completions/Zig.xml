@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <completions xmlns="https://www.nova.app/completions">
-    <provider name="zig">
+    <provider name="zig.global">
         <selector>zig</selector>
         <expression>\b[a-zA-Z0-9-_]*</expression>
         <set>zig.keywords</set>
