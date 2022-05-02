@@ -33,6 +33,10 @@ fn foo() {
   print("foobar");
 }
 
+pub fn main() {
+  
+}
+
 test "foobar" {
   
 }

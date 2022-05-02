@@ -42,7 +42,6 @@
     </surrounding-pairs>
     
     <scopes>
-        <!-- Declarations -->
         <include syntax="self" collection="declarations" />
 
         <scope name="zig.struct">
@@ -88,19 +87,41 @@
                 <context behavior="subtree" />
             </symbol>
             <starts-with>
-                <expression>(const)\s+([A-Za-z_][A-Za-z0-9_]*)\s+=\s+(enum)(\(([^\)]+)\))?\s+(\{)</expression>
+                <expression>(const)\s+([A-Za-z_][A-Za-z0-9_]*)\s+=\s+(enum)</expression>
                 <capture number="1" name="zig.keyword.const" />
                 <capture number="2" name="zig.enum.name" />
                 <capture number="3" name="zig.keyword.enum" />
-                <capture number="5" name="zig.enum.type" />
-                <capture number="6" name="zig.bracket" />
             </starts-with>
-            <ends-with>
-                <expression>\}</expression>
-                <capture number="0" name="zig.bracket" />
-            </ends-with>
-            <subscopes>
-                <include syntax="self" collection="members" />
+            <ends-with />
+            <subscopes anchored="true">
+                <scope name="zig.enum.type" optional="true">
+                    <starts-with>
+                        <expression>\(</expression>
+                    </starts-with>
+                    <ends-with>
+                        <expression>\)</expression>
+                    </ends-with>
+                    <subscopes>
+                        <include syntax="self" collection="keywords" />
+                        <include syntax="self" collection="numbers" />
+                        <include syntax="self" collection="strings" />
+                        <include syntax="self" collection="identifiers" />
+                    </subscopes>
+                </scope>
+                <scope name="zig.enum.members">
+                    <symbol type="block">
+                        <context behavior="subtree" />
+                    </symbol>
+                    <starts-with>
+                        <expression>\{</expression>
+                    </starts-with>
+                    <ends-with>
+                        <expression>\}</expression>
+                    </ends-with>
+                    <subscopes>
+                        <include syntax="self" collection="members" />
+                    </subscopes>
+                </scope>
             </subscopes>
         </scope>
         
@@ -188,7 +209,6 @@
     </scopes>
     
     <collections>
-        <!-- Keywords -->
         <collection name="keywords">
             <scope name="zig.keyword">
                 <symbol type="keyword" />
@@ -277,7 +297,29 @@
             </scope>
         </collection>
         
-        <!-- Numbers -->
+        <collection name="expressions">
+            <scope name="zig.expression.primary">
+                <expression></expression>
+                <cut-off>
+                    <expression>;</expression>
+                </cut-off>
+                <subscopes>
+                    <scope name="zig.expression.grouped">
+                        <starts-with>
+                            <expression>\(</expression>
+                        </starts-with>
+                        <ends-with>
+                            <expression>\)</expression>
+                        </ends-with>
+                        <subscopes><include syntax="self" collection="expressions" /></subscopes>
+                    </scope>
+                    <include syntax="self" collection="numbers" />
+                    <include syntax="self" collection="strings" />
+                    <include syntax="self" collection="identifiers" />
+                </subscopes>
+            </scope>
+        </collection>
+        
         <collection name="numbers">
             <scope name="zig.number.float">
                 <symbol type="expression" />
@@ -290,8 +332,6 @@
                 <expression>(([0-9]_?[0-9])+)</expression>
             </scope>
         </collection>
-        
-        <!-- Strings -->
         <collection name="strings">
             <scope name="zig.char.char">
                 <!-- See char_char -->
@@ -321,8 +361,6 @@
                 </ends-with>
             </scope>
         </collection>
-
-        <!-- Identifiers -->
         <collection name="identifiers">
             <scope name="zig.identifier.plain">
                 <expression>([A-Za-z_][A-Za-z0-9_]*)</expression>
